@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
-max_steps = 1000
+max_steps = 100
 learning_rate = 0.001
 dropout = 0.9
 data_dir = 'MNIST_data'
@@ -70,11 +70,12 @@ tf.summary.scalar('cross_entropy', cross_entropy)
 
 with tf.name_scope('train'):
     train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
+
 with tf.name_scope('accuracy'):
     with tf.name_scope('correct_prediction'):
         correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
-    with tf.name_scope('accuracy'):
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    #with tf.name_scope('accuracy'):
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 tf.summary.scalar('accuracy', accuracy)
 
 merged = tf.summary.merge_all()
@@ -93,7 +94,6 @@ def feed_dict(train):
     return {x:xs, y_:ys, keep_prob:k}
 
 saver = tf.train.Saver()
-#print('*********************')
 for i in range(max_steps):
     if i % 10 == 0:
         summary, acc = sess.run([merged, accuracy], feed_dict=feed_dict(False))
